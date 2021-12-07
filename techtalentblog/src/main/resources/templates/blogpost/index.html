@@ -2,36 +2,60 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <div th:replace="/fragments/styling :: head-style"></div>
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
     <title>Blog Site</title>
 </head>
 
 <body>
-    <h1>Welcome to Our Blog Post Site!</h1>
-    <h3>Check out our blogs!</h3>
 
-    <p>Please use the form below to submit a Blog Post:</p>
-<form action="#" th:action="@{/}" th:object="${blogPost}" method="post">
-    <table>
-	<tr>
-            <td>Title</td>
-	    <td><input type="text" th:field="*{title}" /></td>
-	</tr>
-	<tr>
-	    <td>Author:</td>
-	    <td><input type="text" th:field="*{author}" /></td>
-	</tr>
-	<tr>
-    	    <td>Blog Entry:</td>
-	    <td><input type="text" th:field="*{blogEntry}" /></td>
-	</tr>
-	<tr>
-	    <td><button type="submit">Submit Your Post</button></td>
-	</tr>
-    </table>
-</form>
+    <div th:replace="fragments/navbar :: navbar"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div th:each="blog:${posts}">
+                <div class="col-md-12">
+                    <div class="panel panel-default panel-index">
+                        <div class="panel-heading">
+                            <h2 th:text="${blog.title}"></h2>
+                        </div>
+                        <div class="panel-body">
+                            <strong>
+                                <p th:text="${blog.author}"></p>
+                            </strong>
+                            <p th:text="${blog.blogEntry}"></p>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="card-footer">
+                                <button class="btn btn-primary"><a href="#"
+                                        th:href="@{blogposts/{id}(id=${blog.id})}">Edit Post</a></button>
+                                <form action="#" th:action="@{'/blogposts/{id}'(id=${blog.id})}" th:method="delete"
+                                    class="form-horizontal">
+                                    <div class="form-group">
+                                        <input type="hidden" name="_method" value="delete" />
+                                        <button type="submit" class="btn btn-danger btn-block"
+                                            onclick="return DeletusMaximus()"
+                                            th:text="Delete">Delete
+                                            Post</button>
+                                    </div><!-- onclick="if (!confirm('Are you sure you want to delete this Blog Entry?')) { return false }" -->
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <script>
+        DeletusMaximus = () => {
+            let result = confirm('Are you sure you want to delete this Blog Post?')
+            if (!result) {
+                return false
+            }
+        }
+    </script>
+    
+    <div th:replace="/fragments/styling :: body-links" ></div>
 
 </body>
 
